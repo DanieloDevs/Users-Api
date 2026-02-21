@@ -25,10 +25,38 @@ public class UserService {
                 "Daniel",
                 "5555555555",
                 "danielo10",
-                "OIMB123456789",
+                "OIMD123456789",
                 LocalDateTime.now(),
                 Arrays.asList(address1, address2));
         users.add(user1);
+
+        Address address3 = new Address(3L, "workaddress", "street No.3", "US");
+        Address address4 = new Address(4L, "homeaddress", "street No.4", "UK");
+
+        User user2 = new User(
+                UUID.randomUUID(),
+                "brandon@gmail.com",
+                "Brandon",
+                "5444444444",
+                "brandon10",
+                "OIMB123456789",
+                LocalDateTime.now(),
+                Arrays.asList(address3, address4));
+        users.add(user2);
+
+        Address address5 = new Address(5L, "workaddress", "street No.5", "UA");
+        Address address6 = new Address(6L, "homeaddress", "street No.6", "UL");
+
+        User user3 = new User(
+                UUID.randomUUID(),
+                "juanito@gmail.com",
+                "Juanito",
+                "4444444444",
+                "juanito10",
+                "OIMJ123456789",
+                LocalDateTime.now(),
+                Arrays.asList(address5, address6));
+        users.add(user3);
     }
 
     public List<User> getAllUsers() {
