@@ -1,11 +1,14 @@
 package com.daniel.users_api.service;
 
 import org.springframework.stereotype.Service;
+
+import com.daniel.users_api.dto.UserResponseDTO;
 import com.daniel.users_api.model.Address;
 import com.daniel.users_api.model.User;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -59,7 +62,16 @@ public class UserService {
         users.add(user3);
     }
 
-    public List<User> getAllUsers() {
-        return users;
+    public List<UserResponseDTO> getAllUsers() {
+        return users.stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getName(),
+                        user.getPhone(),
+                        user.getTaxId(),
+                        user.getCreatedAt(),
+                        user.getAddresses()))
+                .collect(Collectors.toList());
     }
 }

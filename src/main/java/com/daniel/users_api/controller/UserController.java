@@ -1,6 +1,6 @@
 package com.daniel.users_api.controller;
 
-import com.daniel.users_api.model.User;
+import com.daniel.users_api.dto.UserResponseDTO;
 import com.daniel.users_api.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +17,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserResponseDTO> getAllUsers() {
         return userService.getAllUsers();
     }
 }
