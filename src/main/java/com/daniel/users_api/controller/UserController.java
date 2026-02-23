@@ -4,6 +4,7 @@ import com.daniel.users_api.dto.UserResponseDTO;
 import com.daniel.users_api.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import com.daniel.users_api.dto.ApiResponse;
+import com.daniel.users_api.dto.UserRequestDTO;
 
 import java.util.List;
 
@@ -26,5 +27,17 @@ public class UserController {
                 true,
                 "Users retrieved successfully",
                 users);
+    }
+
+    @PostMapping
+    public ApiResponse<UserResponseDTO> createUser(
+            @RequestBody UserRequestDTO request) {
+
+        UserResponseDTO createdUser = userService.createUser(request);
+
+        return new ApiResponse<>(
+                true,
+                "User created successfully",
+                createdUser);
     }
 }

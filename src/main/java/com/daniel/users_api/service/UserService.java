@@ -2,6 +2,7 @@ package com.daniel.users_api.service;
 
 import org.springframework.stereotype.Service;
 
+import com.daniel.users_api.dto.UserRequestDTO;
 import com.daniel.users_api.dto.UserResponseDTO;
 import com.daniel.users_api.model.Address;
 import com.daniel.users_api.model.User;
@@ -73,5 +74,53 @@ public class UserService {
                         user.getCreatedAt(),
                         user.getAddresses()))
                 .collect(Collectors.toList());
+    }
+
+    private long addressCounter = 7;
+
+    public UserResponseDTO createUser(UserRequestDTO request) {
+
+        boolean exists = users.stream()
+                .anyMatch(user -> user.getTaxId().equals(request.getTaxId()));
+
+        if (exists) {
+            throw new RuntimeException("Tax ID already exists");
+        }
+
+        List<Address> addressesWithIds = new ArrayList<>();
+
+        if (request.getAddresses() != null) {
+            for (Address address : request.getAddresses()) {
+
+                Address newAddress = new Address(
+                        addressCounter++,
+                        address.getName(),
+                        address.getStreet(),
+                        address.getCountryCode());
+
+                addressesWithIds.add(newAddress);
+            }
+        }
+
+        User newUser = new User(
+                UUID.randomUUID(),
+                request.getEmail(),
+                request.getName(),
+                request.getPhone(),
+                request.getPassword(),
+                request.getTaxId(),
+                LocalDateTime.now(),
+                addressesWithIds);
+
+        users.add(newUser);
+
+        return new UserResponseDTO(
+                newUser.getId(),
+                newUser.getEmail(),
+                newUser.getName(),
+                newUser.getPhone(),
+                newUser.getTaxId(),
+                newUser.getCreatedAt(),
+                newUser.getAddresses());
     }
 }
