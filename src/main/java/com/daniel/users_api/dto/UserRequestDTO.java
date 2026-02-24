@@ -1,21 +1,38 @@
 package com.daniel.users_api.dto;
 
 import com.daniel.users_api.model.Address;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 import java.util.List;
 
 public class UserRequestDTO {
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email format is invalid")
     private String email;
+
+    @NotBlank(message = "Name is required")
     private String name;
+
+    @NotBlank(message = "Phone is required")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone must be 10 digits")
     private String phone;
+
+    @NotBlank(message = "Password is required")
     private String password;
+
+    @NotBlank(message = "Tax ID is required")
+    @Pattern(regexp = "^[A-Z0-9]{10,13}$", message = "Tax ID format is invalid")
     private String taxId;
+
     private List<Address> addresses;
 
     public UserRequestDTO() {
     }
 
-    // getters y setters
     public String getEmail() {
         return email;
     }

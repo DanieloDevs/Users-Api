@@ -3,6 +3,9 @@ package com.daniel.users_api.controller;
 import com.daniel.users_api.dto.UserResponseDTO;
 import com.daniel.users_api.dto.UserUpdateDTO;
 import com.daniel.users_api.service.UserService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.*;
 import com.daniel.users_api.dto.ApiResponse;
 import com.daniel.users_api.dto.UserRequestDTO;
@@ -35,7 +38,7 @@ public class UserController {
 
     @PostMapping
     public ApiResponse<UserResponseDTO> createUser(
-            @RequestBody UserRequestDTO request) {
+            @Valid @RequestBody UserRequestDTO request) {
 
         UserResponseDTO createdUser = userService.createUser(request);
 
