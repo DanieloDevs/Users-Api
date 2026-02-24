@@ -10,7 +10,6 @@ import com.daniel.users_api.model.User;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -64,8 +63,37 @@ public class UserService {
         users.add(user3);
     }
 
-    public List<UserResponseDTO> getAllUsers() {
-        return users.stream()
+    public List<UserResponseDTO> getAllUsers(String sortedBy) {
+
+        List<User> sortedUsers = new ArrayList<>(users);
+
+        if (sortedBy != null && !sortedBy.isBlank()) {
+
+            switch (sortedBy) {
+                case "email":
+                    sortedUsers.sort(Comparator.comparing(User::getEmail));
+                    break;
+                case "id":
+                    sortedUsers.sort(Comparator.comparing(User::getId));
+                    break;
+                case "name":
+                    sortedUsers.sort(Comparator.comparing(User::getName));
+                    break;
+                case "phone":
+                    sortedUsers.sort(Comparator.comparing(User::getPhone));
+                    break;
+                case "tax_id":
+                    sortedUsers.sort(Comparator.comparing(User::getTaxId));
+                    break;
+                case "created_at":
+                    sortedUsers.sort(Comparator.comparing(User::getCreatedAt));
+                    break;
+                default:
+                    throw new RuntimeException("Invalid sortedBy parameter");
+            }
+        }
+
+        return sortedUsers.stream()
                 .map(user -> new UserResponseDTO(
                         user.getId(),
                         user.getEmail(),
@@ -74,7 +102,7 @@ public class UserService {
                         user.getTaxId(),
                         user.getCreatedAt(),
                         user.getAddresses()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private long addressCounter = 7;

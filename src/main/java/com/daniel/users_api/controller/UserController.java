@@ -21,9 +21,10 @@ public class UserController {
     }
 
     @GetMapping
-    public ApiResponse<List<UserResponseDTO>> getAllUsers() {
+    public ApiResponse<List<UserResponseDTO>> getAllUsers(
+            @RequestParam(required = false) String sortedBy) {
 
-        List<UserResponseDTO> users = userService.getAllUsers();
+        List<UserResponseDTO> users = userService.getAllUsers(sortedBy);
 
         return new ApiResponse<>(
                 true,
