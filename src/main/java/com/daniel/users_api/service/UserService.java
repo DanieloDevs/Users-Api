@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.daniel.users_api.dto.UserRequestDTO;
 import com.daniel.users_api.dto.UserResponseDTO;
+import com.daniel.users_api.dto.UserUpdateDTO;
 import com.daniel.users_api.model.Address;
 import com.daniel.users_api.model.User;
 
@@ -131,6 +132,51 @@ public class UserService {
         if (!removed) {
             throw new RuntimeException("User not found");
         }
+    }
+
+    public UserResponseDTO updateUser(UUID id, UserUpdateDTO request) {
+
+        User user = users.stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
+        }
+
+        if (request.getName() != null) {
+            user.setName(request.getName());
+        }
+
+        if (request.getPhone() != null) {
+            user.setPhone(request.getPhone());
+        }
+
+        if (request.getPassword() != null) {
+            user.setPassword(request.getPassword());
+        }
+
+        if (request.getTaxId() != null) {
+            boolean exists = users.stream()
+                    .anyMatch(u -> !u.getId().equals(id)
+                            && u.getTaxId().equals(request.getTaxId()));
+
+            if (exists) {
+                throw new RuntimeException("Tax ID already exists");
+            }
+
+            user.setTaxId(request.getTaxId());
+        }
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                user.getPhone(),
+                user.getTaxId(),
+                user.getCreatedAt(),
+                user.getAddresses());
     }
 
 }

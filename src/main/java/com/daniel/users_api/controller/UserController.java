@@ -1,6 +1,7 @@
 package com.daniel.users_api.controller;
 
 import com.daniel.users_api.dto.UserResponseDTO;
+import com.daniel.users_api.dto.UserUpdateDTO;
 import com.daniel.users_api.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import com.daniel.users_api.dto.ApiResponse;
@@ -51,5 +52,18 @@ public class UserController {
                 true,
                 "User deleted successfully",
                 null);
+    }
+
+    @PatchMapping("/{id}")
+    public ApiResponse<UserResponseDTO> updateUser(
+            @PathVariable UUID id,
+            @RequestBody UserUpdateDTO request) {
+
+        UserResponseDTO updatedUser = userService.updateUser(id, request);
+
+        return new ApiResponse<>(
+                true,
+                "User updated successfully",
+                updatedUser);
     }
 }
