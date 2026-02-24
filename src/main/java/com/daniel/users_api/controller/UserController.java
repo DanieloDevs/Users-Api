@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
 import com.daniel.users_api.dto.ApiResponse;
+import com.daniel.users_api.dto.LoginRequestDTO;
 import com.daniel.users_api.dto.UserRequestDTO;
 
 import java.util.List;
@@ -70,5 +71,19 @@ public class UserController {
                 true,
                 "User updated successfully",
                 updatedUser);
+    }
+
+    @PostMapping("/login")
+    public ApiResponse<UserResponseDTO> login(
+            @RequestBody LoginRequestDTO request) {
+
+        UserResponseDTO user = userService.login(
+                request.getEmail(),
+                request.getPassword());
+
+        return new ApiResponse<>(
+                true,
+                "Login successful",
+                user);
     }
 }

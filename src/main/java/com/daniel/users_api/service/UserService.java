@@ -8,6 +8,7 @@ import com.daniel.users_api.dto.UserUpdateDTO;
 import com.daniel.users_api.exception.BadRequestException;
 import com.daniel.users_api.exception.UserNotFoundException;
 import com.daniel.users_api.model.Address;
+import java.time.ZoneId;
 import com.daniel.users_api.model.User;
 
 import java.time.LocalDateTime;
@@ -32,7 +33,7 @@ public class UserService {
                 "5555555555",
                 "danielo10",
                 "OIMD123456789",
-                LocalDateTime.now(),
+                LocalDateTime.now(ZoneId.of("Indian/Antananarivo")),
                 Arrays.asList(address1, address2));
         users.add(user1);
 
@@ -46,7 +47,7 @@ public class UserService {
                 "5444444444",
                 "brandon10",
                 "OIMB123456789",
-                LocalDateTime.now(),
+                LocalDateTime.now(ZoneId.of("Indian/Antananarivo")),
                 Arrays.asList(address3, address4));
         users.add(user2);
 
@@ -60,7 +61,7 @@ public class UserService {
                 "4444444444",
                 "juanito10",
                 "OIMJ123456789",
-                LocalDateTime.now(),
+                LocalDateTime.now(ZoneId.of("Indian/Antananarivo")),
                 Arrays.asList(address5, address6));
         users.add(user3);
     }
@@ -194,7 +195,7 @@ public class UserService {
                 request.getPhone(),
                 request.getPassword(),
                 request.getTaxId(),
-                LocalDateTime.now(),
+                LocalDateTime.now(ZoneId.of("Indian/Antananarivo")),
                 addressesWithIds);
 
         users.add(newUser);
@@ -252,6 +253,24 @@ public class UserService {
 
             user.setTaxId(request.getTaxId());
         }
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                user.getPhone(),
+                user.getTaxId(),
+                user.getCreatedAt(),
+                user.getAddresses());
+    }
+
+    public UserResponseDTO login(String email, String password) {
+
+        User user = users.stream()
+                .filter(u -> u.getEmail().equals(email)
+                        && u.getPassword().equals(password))
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException("Invalid credentials"));
 
         return new UserResponseDTO(
                 user.getId(),
