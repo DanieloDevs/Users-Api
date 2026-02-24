@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import com.daniel.users_api.dto.UserRequestDTO;
 import com.daniel.users_api.dto.UserResponseDTO;
 import com.daniel.users_api.dto.UserUpdateDTO;
+import com.daniel.users_api.exception.BadRequestException;
+import com.daniel.users_api.exception.UserNotFoundException;
 import com.daniel.users_api.model.Address;
 import com.daniel.users_api.model.User;
 
@@ -72,7 +74,7 @@ public class UserService {
             String[] parts = filter.split(" ");
 
             if (parts.length != 3) {
-                throw new RuntimeException("Invalid filter format");
+                throw new BadRequestException("Invalid filter format");
             }
 
             String field = parts[0];
@@ -212,7 +214,7 @@ public class UserService {
         boolean removed = users.removeIf(user -> user.getId().equals(id));
 
         if (!removed) {
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException("User not found");
         }
     }
 
