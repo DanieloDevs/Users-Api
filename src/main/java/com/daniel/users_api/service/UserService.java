@@ -10,6 +10,7 @@ import com.daniel.users_api.exception.UserNotFoundException;
 import com.daniel.users_api.model.Address;
 import java.time.ZoneId;
 import com.daniel.users_api.model.User;
+import com.daniel.users_api.util.EncryptionUtil;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -193,7 +194,7 @@ public class UserService {
                 request.getEmail(),
                 request.getName(),
                 request.getPhone(),
-                request.getPassword(),
+                EncryptionUtil.encrypt(request.getPassword()),
                 request.getTaxId(),
                 LocalDateTime.now(ZoneId.of("Indian/Antananarivo")),
                 addressesWithIds);
@@ -268,7 +269,7 @@ public class UserService {
 
         User user = users.stream()
                 .filter(u -> u.getEmail().equals(email)
-                        && u.getPassword().equals(password))
+                        && u.getPassword().equals(EncryptionUtil.encrypt(password)))
                 .findFirst()
                 .orElseThrow(() -> new BadRequestException("Invalid credentials"));
 
