@@ -63,9 +63,27 @@ public class UserService {
         users.add(user3);
     }
 
-    public List<UserResponseDTO> getAllUsers(String sortedBy) {
+    public List<UserResponseDTO> getAllUsers(String sortedBy, String filter) {
 
-        List<User> sortedUsers = new ArrayList<>(users);
+        List<User> filteredUsers = new ArrayList<>(users);
+
+        if (filter != null && !filter.isBlank()) {
+
+            String[] parts = filter.split(" ");
+
+            if (parts.length != 3) {
+                throw new RuntimeException("Invalid filter format");
+            }
+
+            String field = parts[0];
+            String operator = parts[1];
+            String value = parts[2].toLowerCase();
+
+            filteredUsers = filteredUsers.stream()
+                    .filter(user -> applyFilter(user, field, operator, value))
+                    .toList();
+        }
+        List<User> sortedUsers = new ArrayList<>(filteredUsers);
 
         if (sortedBy != null && !sortedBy.isBlank()) {
 
@@ -92,7 +110,6 @@ public class UserService {
                     throw new RuntimeException("Invalid sortedBy parameter");
             }
         }
-
         return sortedUsers.stream()
                 .map(user -> new UserResponseDTO(
                         user.getId(),
@@ -103,6 +120,43 @@ public class UserService {
                         user.getCreatedAt(),
                         user.getAddresses()))
                 .toList();
+    }
+
+    private boolean applyFilter(User user, String field, String operator, String value) {
+
+        String fieldValue;
+
+        switch (field) {
+            case "email":
+                fieldValue = user.getEmail();
+                break;
+            case "name":
+                fieldValue = user.getName();
+                break;
+            case "phone":
+                fieldValue = user.getPhone();
+                break;
+            case "tax_id":
+                fieldValue = user.getTaxId();
+                break;
+            default:
+                throw new RuntimeException("Invalid filter field");
+        }
+
+        fieldValue = fieldValue.toLowerCase();
+
+        switch (operator) {
+            case "co":
+                return fieldValue.contains(value);
+            case "eq":
+                return fieldValue.equals(value);
+            case "sw":
+                return fieldValue.startsWith(value);
+            case "ew":
+                return fieldValue.endsWith(value);
+            default:
+                throw new RuntimeException("Invalid filter operator");
+        }
     }
 
     private long addressCounter = 7;
