@@ -7,6 +7,7 @@ import com.daniel.users_api.dto.ApiResponse;
 import com.daniel.users_api.dto.UserRequestDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -39,5 +40,16 @@ public class UserController {
                 true,
                 "User created successfully",
                 createdUser);
+    }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<Void> deleteUser(@PathVariable UUID id) {
+
+        userService.deleteUser(id);
+
+        return new ApiResponse<>(
+                true,
+                "User deleted successfully",
+                null);
     }
 }

@@ -123,4 +123,14 @@ public class UserService {
                 newUser.getCreatedAt(),
                 newUser.getAddresses());
     }
+
+    public void deleteUser(UUID id) {
+
+        boolean removed = users.removeIf(user -> user.getId().equals(id));
+
+        if (!removed) {
+            throw new RuntimeException("User not found");
+        }
+    }
+
 }
